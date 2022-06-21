@@ -83,7 +83,7 @@ SECONDS_PER_YEAR = 31536000
 
 depositAPR = Decimal(currentLiquidityRate) / RAY
 variableBorrowAPR = Decimal(currentVariableBorrowRate) / RAY
-stableBorrowAPR = Decimal(currentVariableBorrowRate) / RAY
+stableBorrowAPR = Decimal(currentStableBorrowRate) / RAY
 
 depositAPY = ((1 + (depositAPR / SECONDS_PER_YEAR)) ** SECONDS_PER_YEAR) - 1
 variableBorrowAPY = ((1 + (variableBorrowAPR / SECONDS_PER_YEAR)) ** SECONDS_PER_YEAR) - 1
