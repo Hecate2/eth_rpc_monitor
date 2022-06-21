@@ -1,0 +1,27 @@
+name: run_monitor
+
+    on:
+      schedule:
+        - cron: "*/10 * * * *" #runs every 10 mins
+      workflow_dispatch:
+        env:
+          manual_run: true
+
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: checkout repo content
+            uses: actions/checkout@v2
+          - name: setup python
+            uses: actions/setup-python@v2
+            with:
+              python-version: 3.8
+          - name: execute py script
+            run: |
+              python monitor.py
+            env:
+              email_user: ${{ secrets.email_user }}
+              password: ${{ secrets.password }}
+              receiver: ${{ secrets.receiver }}

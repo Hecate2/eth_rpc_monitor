@@ -3,13 +3,28 @@ from web3.contract import ConciseContract
 from decimal import Decimal
 import time
 import requests
+import io
+import os
 from functools import lru_cache
 from aave_health_factor import AaveHealthFactor
+from email_sender import send_email
 
-w3 = Web3(Web3.HTTPProvider('https://rpc.ankr.com/eth'))
+w3 = Web3(Web3.HTTPProvider('https://eth-mainnet.alchemyapi.io/v2/h5te1mG5Bqgw8d4VHTFFc2XS6YzsjaoR'))
 
-true=True
-false=False
+true = True
+false = False
+
+will_send_email = False
+email_content = io.StringIO()
+original_print = print
+
+
+def _print(*args, **kwargs):
+    original_print(*args, **kwargs)
+    original_print(*args, **kwargs, file=email_content, end='<br />')
+
+
+print = _print
 
 print(b'''---curve.fi---''')
 steth_contract = w3.eth.contract(address='0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84', abi=[  {
@@ -27,6 +42,9 @@ print(f'stETH balance: {steth_balance}')
 print(f'  ETH balance: {eth_balance}')
 price_1_steth_to_eth = Decimal(curve_fi_steth_swap_contract.get_dy(1, 0, 10**18))/Decimal(10**18)
 print(f'    stETH/ETH: {price_1_steth_to_eth}')
+if price_1_steth_to_eth < 0.85:
+    print(f'WARNING: stETH/ETH = {price_1_steth_to_eth} < 0.85')
+    will_send_email = True
 
 input_steth_right = int(eth_balance)
 input_steth_left = 0
@@ -56,6 +74,9 @@ for i in range(10):
         input_steth_left = input_steth_middle
     input_steth_middle = int((input_steth_left + input_steth_right) / 2)
 print(f'        delta: {input_steth_middle} stETH; stETH/ETH={get_price_near_input_steth(input_steth_middle)} within {i} attempts to solve')
+if input_steth_middle < 3000:
+    print(f'WARNING: delta = {input_steth_middle} < 3000')
+    will_send_email = True
 
 print(b'''---AAVE---''')
 # health factor
@@ -63,6 +84,9 @@ monitored_address = '0xBfFb44f61939FC250364Aa78fC350daCa34e5046'
 aave_health_factor_runner = AaveHealthFactor(w3=w3)
 aave_health_factor = Decimal(aave_health_factor_runner.run(borrower_address=monitored_address))/10**18
 print(f'health factor: {aave_health_factor}')
+if aave_health_factor < 1.53:
+    print(f'WARNING: health factor = {aave_health_factor} < 1.53')
+    will_send_email = True
 
 # stETH a/s/vToken APY; reference: https://docs.aave.com/developers/v/2.0/guides/apy-and-apr
 weth_address = w3.toChecksumAddress('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')
@@ -93,6 +117,10 @@ print(f'wETH APY:\n'
       f'{depositAPY*100} % (deposit)\n'
       f'{variableBorrowAPY*100} % (variable borrow)\n'
       f'{stableBorrowAPY*100} % (stable borrow)')
+if depositAPY > 0.04:
+    print(f'WARNING: AAVE depositAPY = {depositAPY*100}% > 4%')
+    will_send_email = True
+
 
 configuration, liquidityIndex, variableBorrowIndex, currentLiquidityRate, currentVariableBorrowRate, currentStableBorrowRate, lastUpdateTimestamp, aTokenAddress, stableDebtTokenAddress, variableDebtTokenAddress, interestRateStrategyAddress, _id\
     = aave_lending_pool_contract.getReserveData(steth_contract.address)
@@ -106,3 +134,11 @@ compound_eth_address = '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5'
 url = f'https://api.compound.finance/api/v2/market_history/graph?asset={compound_eth_address}&min_block_timestamp={current_timestamp - 86400}&max_block_timestamp={current_timestamp + 86400}&num_buckets=16&network=mainnet'
 borrow_rate = Decimal(sorted(requests.get(url).json()['borrow_rates'], key=lambda x: x['block_timestamp'])[-1]['rate'])
 print(f'compound ETH borrow APY: {borrow_rate*100} %')
+if borrow_rate > 0.04:
+    print(f'WARNING: Compound depositAPY = {borrow_rate*100}% > 4%')
+    will_send_email = True
+
+if will_send_email or os.environ.get('manual_run'):
+    send_email('魔镜：监测ETH主网的邮件', email_content.getvalue())
+
+email_content.close()
