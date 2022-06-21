@@ -33,9 +33,14 @@ input_steth_left = 0
 input_steth_middle = int((input_steth_left + input_steth_right)/2)
 
 
+@lru_cache(2000)
+def get_dy(_i: int, _j: int, _dx: int):
+    return curve_fi_steth_swap_contract.get_dy(_i, _j, _dx)
+
+
 @lru_cache(1000)
 def get_price_near_input_steth(_input_steth: int):
-    return (Decimal(curve_fi_steth_swap_contract.get_dy(1, 0, (_input_steth+1)*10**18)) - Decimal(curve_fi_steth_swap_contract.get_dy(1, 0, _input_steth*10**18)))/Decimal(10**18)
+    return (Decimal(get_dy(1, 0, (_input_steth+1)*10**18)) - Decimal(get_dy(1, 0, _input_steth*10**18)))/Decimal(10**18)
 
 
 wanted_price = 0.85
