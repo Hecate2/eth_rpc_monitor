@@ -9,7 +9,7 @@ from functools import lru_cache
 from aave_health_factor import AaveHealthFactor
 from email_sender import send_email
 
-w3 = Web3(Web3.HTTPProvider('https://eth-mainnet.alchemyapi.io/v2/h5te1mG5Bqgw8d4VHTFFc2XS6YzsjaoR'))
+w3 = Web3(Web3.HTTPProvider('https://rpc.ankr.com/eth'))
 
 true = True
 false = False
