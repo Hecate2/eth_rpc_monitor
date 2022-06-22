@@ -13,8 +13,8 @@ def send_wechat(msg):
         url='http://' + wechat_server,
         headers={"Authorization": bearer},
         data=json.dumps({
-            "app": "mjj",
-            "msg": "hello",
+            "app": "mj",
+            "msg": msg,
         }),
     )
     print("Wechat sent")
