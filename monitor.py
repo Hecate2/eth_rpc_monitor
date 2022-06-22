@@ -138,7 +138,10 @@ if borrow_rate > 0.04:
     print(f'WARNING: Compound depositAPY = {borrow_rate*100}% > 4%')
     will_send_email = True
 
-if will_send_email or os.environ.get('manual_run'):
-    send_email('魔镜：监测ETH主网的邮件', email_content.getvalue())
+if will_send_email:
+    if os.environ.get('manual_run'):
+        send_email('[手动运行的测试邮件]魔镜：监测ETH主网的邮件', email_content.getvalue())
+    else:
+        send_email('[自动发出的邮件]魔镜：监测ETH主网的邮件', email_content.getvalue())
 
 email_content.close()
