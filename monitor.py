@@ -5,6 +5,7 @@ import time
 import requests
 import io
 import os
+import datetime
 from functools import lru_cache
 from aave_health_factor import AaveHealthFactor
 from email_sender import send_email
@@ -28,6 +29,9 @@ def _print(*args, **kwargs):
 
 
 print = _print
+
+print(f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")} {time.localtime().tm_zone} {time.strftime("%z")} ')
+print()
 
 print(b'''---curve.fi---''')
 steth_contract = w3.eth.contract(address='0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84', abi=[  {
