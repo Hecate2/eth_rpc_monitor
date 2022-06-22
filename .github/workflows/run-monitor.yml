@@ -22,3 +22,5 @@ jobs:
           email_user: ${{ secrets.email_user }}
           password: ${{ secrets.password }}
           receiver: ${{ secrets.receiver }}
+          URL: ${{ secrets.URL }}
+          BEARER: ${{ secrets.BEARER }}
