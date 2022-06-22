@@ -11,7 +11,7 @@ def send_wechat(msg):
     print("Sent wechat...")
     requests.post(
         url='http://' + wechat_server,
-        headers={"Authorization": bearer},
+        headers={"Authorization": bearer, "Content-Type": "application/json"},
         data=json.dumps({
             "app": "mj",
             "msg": msg,
