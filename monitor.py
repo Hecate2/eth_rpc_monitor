@@ -8,6 +8,7 @@ import os
 from functools import lru_cache
 from aave_health_factor import AaveHealthFactor
 from email_sender import send_email
+from wechat_sender import send_wechat
 
 w3 = Web3(Web3.HTTPProvider('https://rpc.ankr.com/eth'))
 
@@ -16,11 +17,13 @@ false = False
 
 will_send_email = False
 email_content = io.StringIO()
+wechat_content = io.StringIO()
 original_print = print
 
 
 def _print(*args, **kwargs):
     original_print(*args, **kwargs)
+    original_print(*args, **kwargs, file=wechat_content)
     original_print(*args, **kwargs, file=email_content, end='<br />')
 
 
@@ -139,9 +142,12 @@ if borrow_rate > 0.04:
     will_send_email = True
 
 if os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch':
-    print('Email sent because this is a manual run.')
+    print('Message sent because this is a manual run.')
+    send_wechat(wechat_content.getvalue())
     send_email('[手动运行的测试邮件]魔镜：监测ETH主网的邮件', email_content.getvalue())
 elif will_send_email:
+    send_wechat(wechat_content.getvalue())
     send_email('[自动发出的邮件]魔镜：监测ETH主网的邮件', email_content.getvalue())
 
 email_content.close()
+wechat_content.close()
