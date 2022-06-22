@@ -1,10 +1,8 @@
 name: run_monitor
 on:
   schedule:
-    - cron: "*/10 * * * *" #runs every 10 mins
+    - cron: '*/10 * * * *'
   workflow_dispatch:
-    env:
-      manual_run: true
 
 jobs:
   build:
