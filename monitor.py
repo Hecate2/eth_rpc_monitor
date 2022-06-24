@@ -31,6 +31,7 @@ def _print(*args, **kwargs):
 print = _print
 
 print(f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")} {time.localtime().tm_zone} {time.strftime("%z")} ')
+print(f'block height: {w3.eth.block_number}')
 print()
 
 print(b'''---curve.fi---''')
