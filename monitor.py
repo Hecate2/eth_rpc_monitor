@@ -150,6 +150,9 @@ if os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch':
     print('Message sent because this is a manual run.')
     send_wechat(wechat_content.getvalue())
     send_email('[手动运行的测试邮件]魔镜：监测ETH主网的邮件', email_content.getvalue())
+elif os.environ.get('GITHUB_EVENT_NAME') == 'repository_dispatch':
+    print('Message sent because this is triggered remotely.')
+    send_wechat(wechat_content.getvalue())
 elif will_send_email:
     send_wechat(wechat_content.getvalue())
     send_email('[自动发出的邮件]魔镜：监测ETH主网的邮件', email_content.getvalue())

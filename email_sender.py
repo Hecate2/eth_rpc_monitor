@@ -9,7 +9,7 @@ def send_email(subject: str='测试主题', content: str='测试邮件', smtp_se
     email_user = os.environ.get('email_user')
     if not email_user:
         print('WARNING: NO email_user specified', file=sys.stderr)
-        return 
+        return
     password = os.environ.get('password')
     
     email_sender = email_user
