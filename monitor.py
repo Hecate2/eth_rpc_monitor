@@ -88,13 +88,18 @@ if input_steth_middle < 3000:
 
 print(b'''---AAVE---''')
 # health factor
-monitored_address = '0xBfFb44f61939FC250364Aa78fC350daCa34e5046'
-aave_health_factor_runner = AaveHealthFactor(w3=w3)
-aave_health_factor = Decimal(aave_health_factor_runner.run(borrower_address=monitored_address))/10**18
-print(f'health factor:\t{aave_health_factor}')
-if aave_health_factor < 1.53:
-    print(f'WARNING: health factor = {aave_health_factor} < 1.53')
-    will_send_email = True
+def print_health_factor(address: str):
+    aave_health_factor_runner = AaveHealthFactor(w3=w3)
+    aave_health_factor = Decimal(aave_health_factor_runner.run(borrower_address=address))/10**18
+    print(f'{address} health factor:\t{aave_health_factor}')
+    if aave_health_factor < 1.53:
+        print(f'WARNING: health factor = {aave_health_factor} < 1.53')
+        global will_send_email
+        will_send_email = True
+
+
+print_health_factor('0xBfFb44f61939FC250364Aa78fC350daCa34e5046')
+print_health_factor('0x5f3D8F09de7cA8b3a7a72122f715be5cAaf30190')
 
 # stETH a/s/vToken APY; reference: https://docs.aave.com/developers/v/2.0/guides/apy-and-apr
 weth_address = w3.toChecksumAddress('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')
