@@ -131,7 +131,10 @@ print(f'wETH APY:\n'
       f'(variable borrow)\t{variableBorrowAPY*100}%\n'
       f'(stable borrow)\t{stableBorrowAPY*100}%')
 if depositAPY > 0.04:
-    print(f'WARNING: AAVE depositAPY = {depositAPY*100}% > 4%')
+    print(f'WARNING: AAVE wETH depositAPY = {depositAPY*100}% > 4%')
+    will_send_email = True
+if variableBorrowAPY > 0.03:
+    print(f'WARNING: AAVE wETH variableAPY = {variableBorrowAPY*100}% > 3%')
     will_send_email = True
 
 
