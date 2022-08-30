@@ -65,8 +65,8 @@ if price_1_steth_to_eth < 0.85:
     print(f'WARNING: stETH/ETH = {price_1_steth_to_eth} < 0.85')
     will_send_email = True
 print(f'    LUSD/USDC:\t{price_1_lusd_to_usdc}')
-if price_1_lusd_to_usdc < 1.01:
-    print(f'WARNING: LUSD/USDC = {price_1_lusd_to_usdc} < 1.01')
+if price_1_lusd_to_usdc > 1.01:
+    print(f'WARNING: LUSD/USDC = {price_1_lusd_to_usdc} > 1.01')
     will_send_email = True
 
 input_steth_right = int(eth_balance)
