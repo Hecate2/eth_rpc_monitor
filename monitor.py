@@ -11,7 +11,7 @@ from aave_health_factor import AaveHealthFactor
 # from email_sender import send_email
 from wechat_sender import send_wechat
 
-w3 = Web3(Web3.HTTPProvider('https://rpc.ankr.com/eth'))
+w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/582a225362f74cb0bea84626a6140201'))
 
 true = True
 false = False
