@@ -159,6 +159,8 @@ aToken_contract = w3.eth.contract(address=aTokenAddress, abi=[{"inputs":[{"inter
 stETH_aToken_total_supply = Decimal(aToken_contract.totalSupply())/10**18
 print(f'stETH total supply:\t{stETH_aToken_total_supply}')
 
+print(b'''TEMPORARILY SKIPPING COMPOUND''')
+"""
 print(b'''---compound---''')
 current_timestamp = int(time.time())
 compound_eth_address = '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5'
@@ -168,6 +170,7 @@ print(f'compound ETH borrow APY:\t{borrow_rate*100} %')
 if borrow_rate > 0.04:
     print(f'WARNING: Compound depositAPY = {borrow_rate*100}% > 4%')
     will_send_email = True
+"""
 
 if os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch':
     print('Message sent because this is a manual run.')
