@@ -1,2 +1,2 @@
-requests==2.32.2
+requests==2.32.4
 web3==5.29.2
